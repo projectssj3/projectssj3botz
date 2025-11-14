@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin SSJ3 Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial; padding: 20px;}
+button, select, input { padding: 10px; margin-top: 10px; width:100%; }
+pre { background:#eee; padding:10px; margin-top:20px; white-space:pre-wrap;}
+</style>
+</head>
+<body>
+
+<h1>🛡 Panneau Admin SSJ3</h1>
+
+<h2>🏆 Ajouter une victoire</h2>
+<select id="player"></select>
+<button onclick="adminAddWin()">Ajouter 1 victoire</button>
+
+<h2>🎮 Créer un tournoi</h2>
+<input id="t_name" placeholder="Nom du tournoi">
+<button onclick="createTournament()">Créer le tournoi</button>
+
+<pre id="output">JSON mis à jour affiché ici…</pre>
+
+<script>
+let players = [];
+let tournaments = [];
+
+async function load() {
+    players = await (await fetch("../data/players.json")).json();
+    tournaments = await (await fetch("../data/tournaments.json")).json();
+
+    const select = document.getElementById("player");
+    players.players.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = `${p.name} (${p.wins} victoires)`;
+        select.appendChild(opt);
+    });
+}
+
+function adminAddWin() {
+    const id = parseInt(document.getElementById("player").value);
+    const p = players.players.find(x => x.id === id);
+    p.wins++;
+
+    document.getElementById("output").textContent =
+        "Copie-colle ceci dans data/players.json :\n\n" +
+        JSON.stringify(players, null, 2);
+}
+
+function createTournament() {
+    const name = document.getElementById("t_name").value;
+
+    const newT = {
+        id: Date.now(),
+        name: name,
+        status: "en_attente",
+        players: [],
+        matches: []
+    };
+
+    tournaments.tournaments.push(newT);
+
+    document.getElementById("output").textContent =
+        "Copie-colle ceci dans data/tournaments.json :\n\n" +
+        JSON.stringify(tournaments, null, 2);
+}
+
+load();
+</script>
+
+</body>
+</html>

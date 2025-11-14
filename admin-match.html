@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Résultats SSJ3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial; padding: 20px; }
+select, button { padding: 12px; margin-top: 10px; width:100%; }
+pre { background:#eee; padding:15px; margin-top:20px; white-space:pre-wrap; }
+.box { border:1px solid #ccc; padding:20px; margin-top:20px; border-radius:10px;}
+</style>
+</head>
+<body>
+
+<h1>🛡 Panel Admin – Résultat Match</h1>
+
+<div class="box">
+    <h3>👥 Sélection des joueurs</h3>
+    <label>Joueur 1</label>
+    <select id="p1"></select>
+
+    <label>Joueur 2</label>
+    <select id="p2"></select>
+</div>
+
+<div class="box">
+    <h3>🏆 Gagnant</h3>
+    <select id="winner"></select>
+    <button onclick="validateMatch()">Valider le résultat</button>
+</div>
+
+<pre id="output">Le JSON mis à jour sera affiché ici…</pre>
+
+<script>
+let players = [];
+
+async function loadPlayers() {
+    const data = await (await fetch("../data/players.json")).json();
+    players = data.players;
+
+    players.forEach(p => {
+        p1.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        p2.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        winner.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+    });
+}
+
+function validateMatch() {
+    const id1 = parseInt(p1.value);
+    const id2 = parseInt(p2.value);
+    const win = parseInt(winner.value);
+
+    if (id1 === id2) return alert("Les joueurs doivent être différents !");
+    if (win !== id1 && win !== id2) return alert("Le gagnant doit être un des deux joueurs !");
+
+    const winnerPlayer = players.find(p => p.id === win);
+    winnerPlayer.wins++;
+
+    const newJSON = { players };
+
+    output.textContent =
+        "Copie-colle ceci dans data/players.json :\n\n" +
+        JSON.stringify(newJSON, null, 2);
+
+    alert(`Victoire ajoutée à ${winnerPlayer.name} !`);
+}
+
+loadPlayers();
+</script>
+
+</body>
+</html>

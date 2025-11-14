@@ -1,0 +1,7 @@
+{
+  "players": [
+    { "id": 1, "name": "GokuFan", "wins": 0 },
+    { "id": 2, "name": "VegetaBlue", "wins": 0 },
+    { "id": 3, "name": "BrolyMax", "wins": 0 }
+  ]
+}

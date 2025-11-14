@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tournois SSJ3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial; padding:20px;}
+.card { border:1px solid #ccc; padding:15px; margin-top:10px;}
+</style>
+</head>
+<body>
+
+<h1>🎮 Tournois en cours</h1>
+
+<div id="list"></div>
+
+<script>
+async function loadT() {
+    const t = await (await fetch("data/tournaments.json")).json();
+    t.tournaments.forEach(tour=>{
+        list.innerHTML += `
+        <div class="card">
+            <h3>${tour.name}</h3>
+            <p>Status : ${tour.status}</p>
+            <p>Participants : ${tour.players.length}</p>
+        </div>`;
+    });
+}
+loadT();
+</script>
+
+</body>
+</html>

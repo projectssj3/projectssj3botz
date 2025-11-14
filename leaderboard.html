@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Classement SSJ3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial; padding:20px; }
+table { width:100%; border-collapse: collapse; margin-top:20px; }
+th, td { border:1px solid #ccc; padding:10px; text-align:center; }
+</style>
+</head>
+<body>
+
+<h1>🏆 Classement des joueurs SSJ3</h1>
+
+<table>
+<thead>
+<tr><th>Rang</th><th>Joueur</th><th>Victoires</th></tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+
+<script>
+async function loadLB() {
+    const data = await (await fetch("data/players.json")).json();
+
+    data.players
+        .sort((a,b)=>b.wins-a.wins)
+        .forEach((p,i)=>{
+            tbody.innerHTML += `
+            <tr>
+                <td>${i+1}</td>
+                <td>${p.name}</td>
+                <td>${p.wins}</td>
+            </tr>`;
+        });
+}
+loadLB();
+</script>
+
+</body>
+</html>
